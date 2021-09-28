@@ -1,18 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
 import NavBar from './components/NavBar/NavBar'
-import ItemListContainer from './components/ItemListcontainer/ItemListcontainer';
-import Counter from './components/ItemCount/ItemCount'
+import ItemListContainer from './components/ItemListContainer/ItemListContainer';
+import Counter from './components/ItemCount/ItemCount';
+import { BrowserRouter, Switch, Route} from 'react-router-dom';
+import ItemDetailContainer from './components/ItemDetailContainer/ItemDetailContainer';
 
 const App=()=> {
   return (
     <div className="App">
-      <header>
-        <NavBar/>
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
-      <ItemListContainer welcome="bienvenido a mi tienda"/>
-      <Counter /> 
+      <BrowserRouter>
+        <header>
+          <NavBar/>
+         </header>
+         <Switch>
+           <Route exact path="/">
+            <ItemListContainer/> 
+           </Route>
+           <Route path="/item/:id">
+            <ItemDetailContainer/> 
+           </Route>  
+        <Counter />
+         </Switch>   
+      </BrowserRouter>  
     </div>
   );
 }
