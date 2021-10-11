@@ -1,14 +1,12 @@
 import CartWidget from '../CartWidget/CartWidget'
 import './NavBar.css'
-
+import { NavLink } from 'react-router-dom'
 const NavBar=()=>{
     return(
         <nav className="NavBar">
             <div className="LeftNav">
                 <div className="NavOptionsLeft">
-                    <button className="Option">Home</button>
-                    <button className="Option">Nosotros</button>
-                    <button className="Option">Products</button>
+                <NavLink to="/items" className="Option m-2">Products</NavLink>
                 </div>
             </div>
             <div className="RightNav">

@@ -2,28 +2,43 @@ import React from 'react'
 import ItemList from '../ItemList/ItemList'
 import { useEffect, useState } from 'react'
 
-const acua= [
-    {id:1, nombre:"Peces",descripcion:"Agua fria y tropicales", img:"img/pez.jpg"},
-    {id:2, nombre:"Acuarios",descripcion:"Tamaños: Chico, mediano y grande", img:"img/pez.jpg"},
-    {id:3, nombre:"plantas",descripcion:"Vallisneria, echinodorus, cabocha, entre otras", img:"img/pez.jpg"},
-    {id:4, nombre:"accesorios",descripcion:"Filtros, sifones, graba y accesorios", img:"img/pez.jpg"},
-]
-function products () {
-    return new Promise ((resolve, reject)=> {
-        setTimeout(()=> resolve(acua), 2000)
-    })
-}
+import { db } from '../../services/firebase/firebase';
+import { collection, getDocs, query, where } from '@firebase/firestore';
+import { useParams } from 'react-router';
+
 const ItemListContainer = ()=> {
     const [listProducts, setListProducts] = useState([])
-
+    const [Loading, setLoading]=  useState (true)
+    const {category} = useParams();
     useEffect (()=>{
-        const lista = products()
-        
-        lista.then(lista=> {
-            setListProducts (lista)
-        })
-        
-    },[])
+        if(!category){
+            setLoading(true)
+            getDocs(collection(db, 'item')).then((querySnapshot)=>{
+                const products= querySnapshot.docs.map(doc =>{
+                    return{ id: doc.id, ...doc.data()}
+                })
+                setListProducts(products)
+            }).catch((error)=>{
+                console.log('Error searching', error)
+            }).finally(()=>{
+                setLoading(false)
+            });
+        }else{
+            setLoading(true)
+            getDocs(query(collection(db, 'item'), where('category', '**', category))).then((querySnapshot)=>{
+                const products= querySnapshot.docs.map(doc=> {
+                    return{ id: doc.id, ...doc.data()}
+                
+                })
+                setListProducts(products)
+            }).catch((error)=>{
+                console.log('Error searching', error)
+            }).finally(()=>{
+                setLoading(false)
+            });
+        }
+    },[category])
+            
     if(listProducts.length === 0) {
         return (
             <h1>Cargando...</h1>

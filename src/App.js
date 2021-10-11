@@ -13,7 +13,10 @@ const App=()=> {
           <NavBar/>
          </header>
          <Switch>
-           <Route exact path="/">
+           <Route exact path="/items">
+            <ItemListContainer/> 
+           </Route>
+           <Route path="/category/:name">
             <ItemListContainer/> 
            </Route>
            <Route path="/item/:id">
